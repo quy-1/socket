@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ChatModule } from './chat/chat.module';
-import { ChatService } from './chat/chat.service';
+import { ChattingModule } from './modules/chatting/chatting.module';
 import { MongooseModule } from '@nestjs/mongoose';
 require('dotenv').config();
 
@@ -14,8 +13,8 @@ require('dotenv').config();
         },
       },
     ),
-    ChatModule
+    ChattingModule
   ],
-  providers: [ChatService],
+  providers: [],
 })
 export class AppModule {}

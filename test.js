@@ -1,31 +1,24 @@
-const  io =require('socket.io-client') ;
-
-
-const socket = io('ws://localhost:3001', {
-  transports: ['websocket'],
+const {io } =require('socket.io-client');
+const userId = '507f1f77bcf86cd799439011'
+const socket = io(`ws://localhost:3001/send?userId=${userId}`, {
+  transports: ['websocket']
 });
 
 socket.on('connect', () => {
   console.log('✅ Connected to WebSocket server');
-  console.log('Socket ID:', socket.id);
-
-  // Gửi tin nhắn khi kết nối thành công
+  
+  // Gửi tin nhắn ngay sau khi kết nối thành công
   socket.emit('send_message', {
-    senderId: 'user123',
-    receiverId: 'user456',
+    senderId: '507f1f77bcf86cd799439011',
+    receiverId: '507f1f77bcf86cd799439011',
     content: 'Hello from client!',
   });
 
-  console.log('📤 Sent message:', {
-    senderId: 'user123',
-    receiverId: 'user456',
-    content: 'Hello from client!',
-  });
+  console.log('📤 Sent message to server');
 });
 
-// Nhận phản hồi từ server
-socket.on('receiveMessage', (message) => {
-  console.log('📩 New message received:', message);
+socket.on('receive_message', (message) => {
+  console.log('📩 Message received:', message);
 });
 
 socket.on('connect_error', (error) => {
