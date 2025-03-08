@@ -1,6 +1,6 @@
 const {io } =require('socket.io-client');
-const userId = '507f1f77bcf86cd799439011'
-const socket = io(`https://socket-production-d372.up.railway.app?userId=${userId}`, {
+const userId = '67cc98bbb51dfbf23ae995bf'
+const socket = io(`https://socket-production-d372.up.railway.app/send?userId=${userId}`, {
   transports: ['websocket']
 });
 
@@ -9,9 +9,9 @@ socket.on('connect', () => {
   
   // Gửi tin nhắn ngay sau khi kết nối thành công
   socket.emit('send_message', {
-    senderId: '507f1f77bcf86cd799439011',
-    receiverId: '507f1f77bcf86cd799439011',
-    content: 'Hello from client!',
+    senderId: '67cc98bbb51dfbf23ae995bf',
+    receiverId: '67cc958da66bb176f17a1f86',
+    message: 'Hello from client!',
   });
 
   console.log('📤 Sent message to server');

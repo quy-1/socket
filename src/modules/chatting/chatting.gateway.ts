@@ -66,7 +66,8 @@ import { UserService } from '../user/user.service';
       
       if (userReceive?.socketId) {
         // send message
-        this.server.to(userReceive.socketId).emit('receive_message', savedMessage);
+        console.log('sned')
+        this.server.emit('receive_message', savedMessage);
       }
     }
   }
