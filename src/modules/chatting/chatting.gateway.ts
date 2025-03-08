@@ -36,7 +36,7 @@ import { UserService } from '../user/user.service';
       client.on('error', (err) => {
         console.error(`🔥 WebSocket error: ${err.message}`);
       });
-      console.log(client)
+      
       const userId = client.handshake.query.userId as string;
       if (userId) {
       await this.userService.update(userId, { socketId: client.id });
