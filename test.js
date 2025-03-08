@@ -1,6 +1,6 @@
 const {io } =require('socket.io-client');
 const userId = '507f1f77bcf86cd799439011'
-const socket = io(`ws://localhost:3001/send?userId=${userId}`, {
+const socket = io(`https://socket-production-d372.up.railway.app?userId=${userId}`, {
   transports: ['websocket']
 });
 
