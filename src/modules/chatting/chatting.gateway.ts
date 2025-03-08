@@ -58,7 +58,7 @@ import { UserService } from '../user/user.service';
       @MessageBody() message: MessageInterface,
       @ConnectedSocket() client: Socket
     ) {
-      
+      console.log(message)
       const savedMessage = await this.chattingService.saveChat(message, message.senderId);
       
       // find socketId of receiver
