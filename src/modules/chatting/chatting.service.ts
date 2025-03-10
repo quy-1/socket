@@ -8,10 +8,12 @@ export class ChattingService {
     private chattingRepository: ChattingRepository,
   ) {}
   async saveChat(message: MessageInterface, sender: string, conversationId: string) {
-    const chat = {
+    const data = {
       ...message,
       sender: sender,
+      receiver: message.receiverId,
+      conversation: conversationId
     };
-    return await this.chattingRepository.actionCreate(chat);
+    return await this.chattingRepository.actionCreate(data);
   }
 }

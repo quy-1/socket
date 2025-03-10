@@ -20,12 +20,8 @@ export class UserService {
   //   return await this.userRepository.pagination({});
   // }
 
-  async findOne(id: string) {
-    return this.userModel.findOne({
-      where: {
-        _id: id,
-      },
-    });
+  async findOne(where) {
+    return this.userModel.findOne(where);
   }
 
   async update(_id: string, updateUserDto: any) {

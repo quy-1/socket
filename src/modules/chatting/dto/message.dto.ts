@@ -7,7 +7,6 @@ export class MessageInterface {
   @IsString()
   message: string;
 
- 
   @Allow()
   @IsString()
   receiverId: string;

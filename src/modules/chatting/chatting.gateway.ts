@@ -58,6 +58,7 @@ import { BadRequestException } from '@nestjs/common';
       @MessageBody() message: MessageInterface,
       @ConnectedSocket() client: Socket
     ) {
+      try{
       let conversation
       conversation = await this.conversationRepository.actionGetOne({participants: { $all: [message.senderId, message.receiverId] }})
       if(!conversation){
@@ -72,14 +73,16 @@ import { BadRequestException } from '@nestjs/common';
       await this.conversationRepository.actionFindByIdAndUpdate(conversation._id,{ lastMessage: savedMessage._id })
 
       // find socketId of receiver
-      const userReceive = await this.userService.findOne(message.receiverId);
-      
+      const userReceive = await this.userService.findOne({_id:message.receiverId});
       if (!userReceive?.socketId) {
         throw new BadRequestException(`Not found receiver`)
       }
-        // send message
+        console.log(userReceive?.socketId)
       console.log('send success')
       this.server.to(userReceive?.socketId).emit('receive_message', savedMessage);
+    }catch(err:any){
+      console.log(err)
     }
+  }
   }
   
