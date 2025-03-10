@@ -7,7 +7,7 @@ export class ChattingService {
   constructor(
     private chattingRepository: ChattingRepository,
   ) {}
-  async saveChat(message: MessageInterface, sender: any) {
+  async saveChat(message: MessageInterface, sender: string, conversationId: string) {
     const chat = {
       ...message,
       sender: sender,

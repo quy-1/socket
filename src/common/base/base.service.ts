@@ -63,12 +63,19 @@ export class BaseService<T = any> implements BaseServiceDeclare<T> {
     return this.model.find({});
   }
 
+ /**
+   *
+   */
+ async actionGetOne(where): Promise<any[]> {
+  return this.model.findOne(where);
+}
   /**
    *
    */
   async actionDeleteAll(): Promise<any> {
     return this.model.deleteMany({});
   }
+  
 
   /**
    *

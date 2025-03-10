@@ -5,19 +5,19 @@ import {
     WebSocketGateway,
     WebSocketServer,
   } from '@nestjs/websockets';
-  import { Server, Socket } from 'socket.io';
-  
-  import { ChattingService } from './chatting.service';
- 
-
+import { Server, Socket } from 'socket.io';
+import { ChattingService } from './chatting.service';
 import { MessageInterface } from './dto/message.dto';
 import { UserService } from '../user/user.service';
+import { ConversationRepository } from 'src/database/repository/conversation.repository';
+import { BadRequestException } from '@nestjs/common';
   
   @WebSocketGateway({ cors: { origin: '*' }, namespace: 'send' })
   export class ChattingGateway {
     constructor(
       private chattingService: ChattingService,
-      private userService: UserService
+      private userService: UserService,
+      private conversationRepository: ConversationRepository
     ) {}
   
     @WebSocketServer()
@@ -58,17 +58,28 @@ import { UserService } from '../user/user.service';
       @MessageBody() message: MessageInterface,
       @ConnectedSocket() client: Socket
     ) {
-      console.log(message)
-      const savedMessage = await this.chattingService.saveChat(message, message.senderId);
-      
+      let conversation
+      conversation = await this.conversationRepository.actionGetOne({participants: { $all: [message.senderId, message.receiverId] }})
+      if(!conversation){
+         conversation = await this.conversationRepository.actionCreate({ participants:[message.senderId, message.receiverId], type:'PRIVATE',})
+      }
+     
+      const savedMessage = await this.chattingService.saveChat(message, message.senderId, conversation._id);
+      if(!savedMessage){
+        throw new BadRequestException(`Cannot save this message ${message.message}`)
+      }
+
+      await this.conversationRepository.actionFindByIdAndUpdate(conversation._id,{ lastMessage: savedMessage._id })
+
       // find socketId of receiver
       const userReceive = await this.userService.findOne(message.receiverId);
       
-      if (userReceive?.socketId) {
-        // send message
-        console.log('sned')
-        this.server.emit('receive_message', savedMessage);
+      if (!userReceive?.socketId) {
+        throw new BadRequestException(`Not found receiver`)
       }
+        // send message
+      console.log('send success')
+      this.server.to(userReceive?.socketId).emit('receive_message', savedMessage);
     }
   }
   
